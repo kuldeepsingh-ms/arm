@@ -2,11 +2,15 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "asp-demo002Name": {
+    "demoappserviceplanName": {
       "type": "string",
       "minLength": 1
     },
-    "asp-demo002SkuName": {
+    "demowebappname": {
+      "type": "string",
+      "minLength": 1
+    },
+    "demoappserviceplanSkuName": {
       "type": "string",
       "defaultValue": "F1",
       "allowedValues": [
@@ -28,40 +32,40 @@
       }
     }},
   "variables": {
-    "app-demo002Name": "[concat('app-demo002', uniqueString(resourceGroup().id))]"},
+    "demowebappName": "[concat('demowebapp', uniqueString(resourceGroup().id))]"},
   "resources": [
     {
-      "name": "[parameters('asp-demo002Name')]",
+      "name": "[parameters('demoappserviceplanName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
       "sku": {
-        "name": "[parameters('asp-demo002SkuName')]"
+        "name": "[parameters('demoappserviceplanSkuName')]"
       },
       "dependsOn": [ ],
       "tags": {
-        "displayName": "asp-demo002"
+        "displayName": "demoappserviceplan"
       },
       "properties": {
-        "name": "[parameters('asp-demo002Name')]",
+        "name": "[parameters('demoappserviceplanName')]",
         "numberOfWorkers": 1
       }
     },
     {
-      "name": "[variables('app-demo002Name')]",
+      "name": "[parameters('demowebappName')]",
       "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('asp-demo002Name'))]"
+        "[resourceId('Microsoft.Web/serverfarms', parameters('demoappserviceplanName'))]"
       ],
       "tags": {
-        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('asp-demo002Name')))]": "Resource",
-        "displayName": "app-demo002"
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('demoappserviceplanName')))]": "Resource",
+        "displayName": "demowebapp"
       },
       "properties": {
-        "name": "[variables('app-demo002Name')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('asp-demo002Name'))]"
+        "name": "[parameters('demowebappName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('demoappserviceplanName'))]"
       }
     }],
   "outputs": {}
